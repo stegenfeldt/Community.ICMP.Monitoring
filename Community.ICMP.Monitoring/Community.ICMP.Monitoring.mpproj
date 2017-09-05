@@ -76,6 +76,10 @@
     <Compile Include="ManagementPack.mpx">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Monitors\PingMonitors.mptg.mpx">
+      <SubType>Code</SubType>
+      <DependentUpon>Monitors\PingMonitors.mptg</DependentUpon>
+    </Compile>
     <Compile Include="MonitorTypes\PingResponseTime2StateMonitorType.mpx">
       <SubType>Code</SubType>
     </Compile>
@@ -85,6 +89,12 @@
     <Folder Include="Monitors" />
     <Folder Include="MonitorTypes" />
     <Folder Include="ProbeModules" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Monitors\PingMonitors.mptg">
+      <SubType>Content</SubType>
+      <Generator>FragmentGenerator</Generator>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VSAC\Microsoft.SystemCenter.OperationsManager.targets" />
 </Project>
