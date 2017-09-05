@@ -3,15 +3,10 @@
   <Manifest>
     <Identity>
       <ID>Community.ICMP.Monitoring</ID>
-      <Version>1.0.0.17</Version>
+      <Version>1.0.0.18</Version>
     </Identity>
     <Name>Community.ICMP.Monitoring</Name>
     <References>
-      <Reference Alias="MSNL">
-        <ID>Microsoft.SystemCenter.NetworkDevice.Library</ID>
-        <Version>7.1.10226.0</Version>
-        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
-      </Reference>
       <Reference Alias="Health">
         <ID>System.Health.Library</ID>
         <Version>7.0.8433.0</Version>
@@ -20,6 +15,11 @@
       <Reference Alias="System">
         <ID>System.Library</ID>
         <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="SNL">
+        <ID>System.NetworkManagement.Library</ID>
+        <Version>7.1.10226.0</Version>
         <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
       </Reference>
       <Reference Alias="SNM">
@@ -191,7 +191,7 @@
   </TypeDefinitions>
   <Monitoring>
     <Monitors>
-      <UnitMonitor ID="Community.ICMP.Monitoring.PingLatencyMonitor" Accessibility="Public" Enabled="true" Target="MSNL!Microsoft.SystemCenter.NetworkDevice" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="Community.ICMP.Ping.ResponseTime2State.MonitorType" ConfirmDelivery="false">
+      <UnitMonitor ID="Community.ICMP.Monitoring.PingLatencyMonitor" Accessibility="Public" Enabled="true" Target="SNL!System.NetworkManagement.Node" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="Community.ICMP.Ping.ResponseTime2State.MonitorType" ConfirmDelivery="false">
         <Category>PerformanceHealth</Category>
         <AlertSettings AlertMessage="Community.ICMP.Monitoring.PingLatencyMonitor.AlertMessage">
           <AlertOnState>Warning</AlertOnState>
@@ -204,7 +204,7 @@
           <OperationalState ID="OverThreshold" MonitorTypeStateID="OverThreshold" HealthState="Warning" />
         </OperationalStates>
         <Configuration>
-          <IP>$Target/Property[Type='MSNL!Microsoft.SystemCenter.NetworkDevice']/IPAddress$</IP>
+          <IP>$Target/Property[Type='SNL!System.NetworkManagement.Node']/SNMPAddress$</IP>
           <Interval>300</Interval>
           <ErrorThreshold>50</ErrorThreshold>
           <NoOfRetries>1</NoOfRetries>

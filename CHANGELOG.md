@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/) 
+The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Datasource: Community.ICMP.ICMPPingTime.DS
 - MonitorType: Community.ICMP.Ping.ResponseTime2State.MonitorType
 - Develop branch for ongoing development and latest releases
+- Monitor: Community.ICMP.Monitoring.PingLatencyMonitor on NetworkDevice class
 
 ### Changed
 - README.md

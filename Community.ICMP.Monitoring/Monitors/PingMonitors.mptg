@@ -3,7 +3,7 @@
     <Instance ID="Instance1cb8bbbf42bb4bd8ba0ce5a2d4aaa2da" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.UnitMonitor" Version="1.0.0.0">
       <UnitMonitorConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <MonitorType>Community.ICMP.Ping.ResponseTime2State.MonitorType</MonitorType>
-        <MonitorConfig>&lt;IP&gt;$Target/Property[Type='MSNL!Microsoft.SystemCenter.NetworkDevice']/IPAddress$&lt;/IP&gt;&lt;Interval&gt;300&lt;/Interval&gt;&lt;ErrorThreshold&gt;50&lt;/ErrorThreshold&gt;&lt;NoOfRetries&gt;1&lt;/NoOfRetries&gt;&lt;NumberOfSamples&gt;3&lt;/NumberOfSamples&gt;</MonitorConfig>
+        <MonitorConfig>&lt;IP&gt;$Target/Property[Type='SNL!System.NetworkManagement.Node']/SNMPAddress$&lt;/IP&gt;&lt;Interval&gt;300&lt;/Interval&gt;&lt;ErrorThreshold&gt;50&lt;/ErrorThreshold&gt;&lt;NoOfRetries&gt;1&lt;/NoOfRetries&gt;&lt;NumberOfSamples&gt;3&lt;/NumberOfSamples&gt;</MonitorConfig>
         <MonitorOperationalStates>
           <OperationalState>
             <OperationalStateId>BelowThreshold</OperationalStateId>
@@ -23,7 +23,7 @@
         <Id>PingLatencyMonitor</Id>
         <DisplayName>Ping Latency Monitor</DisplayName>
         <Description>Raises an alert when ICMP Ping latency is above the set threshold.</Description>
-        <Target>MSNL!Microsoft.SystemCenter.NetworkDevice</Target>
+        <Target>SNL!System.NetworkManagement.Node</Target>
         <Enabled>true</Enabled>
         <Category>PerformanceHealth</Category>
         <Remotable>true</Remotable>

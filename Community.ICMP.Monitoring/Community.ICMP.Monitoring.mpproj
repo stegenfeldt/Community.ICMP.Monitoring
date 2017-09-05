@@ -56,6 +56,12 @@
       <Alias>Visualization</Alias>
       <PackageToBundle>false</PackageToBundle>
     </ManagementPackReference>
+    <ManagementPackReference Include="System.NetworkManagement.Library">
+      <HintPath>C:\Program Files (x86)\System Center Visual Studio Authoring Extensions\References\OM2012R2\System.NetworkManagement.Library.mp</HintPath>
+      <Alias>SNL</Alias>
+      <MinVersion>7.1.10226.0</MinVersion>
+      <PackageToBundle>False</PackageToBundle>
+    </ManagementPackReference>
     <ManagementPackReference Include="System.NetworkManagement.Monitoring">
       <HintPath>C:\Users\saper\OneDrive - Atea\Dev\SC\Community.ICMP.Monitoring\Community.ICMP.Monitoring\References\System.NetworkManagement.Monitoring.mp</HintPath>
       <Alias>SNM</Alias>
