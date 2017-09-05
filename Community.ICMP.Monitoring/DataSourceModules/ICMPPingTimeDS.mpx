@@ -1,7 +1,7 @@
 ﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <TypeDefinitions>
     <ModuleTypes>
-      <DataSourceModuleType ID="Community.ICMP.ICMPPingTime.DS" Accessibility="Internal" Batching="false">
+      <DataSourceModuleType ID="Community.ICMP.ICMPPingTime.DS" Accessibility="Public" Batching="false">
         <Configuration>
           <xsd:element minOccurs="1" name="IP" type="xsd:string" />
           <xsd:element minOccurs="1" name="Interval" type="xsd:integer" />
