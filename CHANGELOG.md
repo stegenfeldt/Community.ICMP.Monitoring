@@ -7,14 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - This changelog!
+- README.md
+- LICENSE.md
 - SNK for signing and sealing
 - Solution and Project
 - References not shipped with VSAE
 - Datasource: Community.ICMP.ICMPPingTime.DS
 - MonitorType: Community.ICMP.Ping.ResponseTime2State.MonitorType
+- Develop branch for ongoing development and latest releases
 
 ### Changed
---
+- README.md
 
 ### Fixed
 --
