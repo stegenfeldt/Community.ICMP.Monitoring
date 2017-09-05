@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ManagementPack SchemaVersion="2.0" ContentReadable="true" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Manifest>
+    <Identity>
+      <ID>Community.ICMP.Monitoring</ID>
+      <Version>1.0.0.12</Version>
+    </Identity>
+    <Name>Community.ICMP.Monitoring</Name>
+    <References>
+      <Reference Alias="System">
+        <ID>System.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="SNM">
+        <ID>System.NetworkManagement.Monitoring</ID>
+        <Version>7.1.10226.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Perf">
+        <ID>System.Performance.Library</ID>
+        <Version>7.0.8433.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+    </References>
+  </Manifest>
+  <TypeDefinitions>
+    <ModuleTypes>
+      <DataSourceModuleType ID="Community.ICMP.ICMPPingTime.DS" Accessibility="Internal" Batching="false">
+        <Configuration>
+          <xsd:element minOccurs="1" name="IP" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="Interval" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="0" maxOccurs="1" default="3" name="NoOfRetries" type="xsd:unsignedInt" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="0" maxOccurs="1" default="1500" name="Timeout" type="xsd:unsignedInt" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="0" maxOccurs="1" default="700" name="PacketSizeBytes" type="xsd:unsignedInt" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="0" maxOccurs="1" default="3" name="NumberOfSamples" type="xsd:unsignedInt" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="Interval" Selector="$Config/Interval$" ParameterType="int" />
+          <OverrideableParameter ID="NoOfRetries" Selector="$Config/NoOfRetries$" ParameterType="int" />
+          <OverrideableParameter ID="Timeout" Selector="$Config/Timeout$" ParameterType="int" />
+          <OverrideableParameter ID="PacketSizeBytes" Selector="$Config/PacketSizeBytes$" ParameterType="int" />
+          <OverrideableParameter ID="NumberOfSamples" Selector="$Config/NumberOfSamples$" ParameterType="int" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <DataSource ID="SchedulerDS" TypeID="System!System.Scheduler">
+                <Scheduler>
+                  <SimpleReccuringSchedule>
+                    <Interval Unit="Seconds">$Config/Interval$</Interval>
+                    <SpreadInitializationOverInterval Unit="Seconds">$Config/Interval$</SpreadInitializationOverInterval>
+                  </SimpleReccuringSchedule>
+                  <ExcludeDates />
+                </Scheduler>
+              </DataSource>
+              <ProbeAction ID="PingProbe" TypeID="System!System.ICMPProbe">
+                <Destination>$Config/IP$</Destination>
+                <TimeoutMilliseconds>$Config/Timeout$</TimeoutMilliseconds>
+                <Retries>$Config/NoOfRetries$</Retries>
+                <PacketSizeBytes>$Config/PacketSizeBytes$</PacketSizeBytes>
+              </ProbeAction>
+              <ConditionDetection ID="ErrorHandlingFilter" TypeID="SNM!System.NetworkManagement.ExpressionFilter">
+                <Expression>
+                  <SimpleExpression>
+                    <ValueExpression>
+                      <XPathQuery Type="UnsignedInteger">ResponseStatus</XPathQuery>
+                    </ValueExpression>
+                    <Operator>Equal</Operator>
+                    <ValueExpression>
+                      <Value Type="UnsignedInteger">0</Value>
+                    </ValueExpression>
+                  </SimpleExpression>
+                </Expression>
+                <SuppressionSettings>
+                  <MatchCount>1</MatchCount>
+                  <SampleCount>1</SampleCount>
+                </SuppressionSettings>
+              </ConditionDetection>
+              <ConditionDetection ID="PerfMapper" TypeID="Perf!System.Performance.DataGenericMapper">
+                <ObjectName>ICMP Ping</ObjectName>
+                <CounterName>Response Time (ms)</CounterName>
+                <InstanceName />
+                <Value>$Data/ResponseTime$</Value>
+              </ConditionDetection>
+              <ConditionDetection ID="Average" TypeID="Perf!System.Performance.AveragerCondition">
+                <NumSamples>$Config/NumberOfSamples$</NumSamples>
+              </ConditionDetection>
+            </MemberModules>
+            <Composition>
+              <Node ID="Average">
+                <Node ID="PerfMapper">
+                  <Node ID="ErrorHandlingFilter">
+                    <Node ID="PingProbe">
+                      <Node ID="SchedulerDS" />
+                    </Node>
+                  </Node>
+                </Node>
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>Perf!System.Performance.Data</OutputType>
+      </DataSourceModuleType>
+    </ModuleTypes>
+    <MonitorTypes>
+      <UnitMonitorType ID="Community.ICMP.Ping.ResponseTime2State.MonitorType" Accessibility="Public">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="BelowThreshold" />
+          <MonitorTypeState ID="OverThreshold" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element minOccurs="1" name="IP" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="Interval" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="ErrorThreshold" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="0" maxOccurs="1" default="3" name="NoOfRetries" type="xsd:unsignedInt" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="0" maxOccurs="1" default="1500" name="Timeout" type="xsd:unsignedInt" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="0" maxOccurs="1" default="700" name="PacketSizeBytes" type="xsd:unsignedInt" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="0" maxOccurs="1" default="3" name="NumberOfSamples" type="xsd:unsignedInt" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="Interval" Selector="$Config/Interval$" ParameterType="int" />
+          <OverrideableParameter ID="NoOfRetries" Selector="$Config/NoOfRetries$" ParameterType="int" />
+          <OverrideableParameter ID="ErrorThreshold" Selector="$Config/ErrorThreshold$" ParameterType="int" />
+          <OverrideableParameter ID="Timeout" Selector="$Config/Timeout$" ParameterType="int" />
+          <OverrideableParameter ID="PacketSizeBytes" Selector="$Config/PacketSizeBytes$" ParameterType="int" />
+          <OverrideableParameter ID="NumberOfSamples" Selector="$Config/NumberOfSamples$" ParameterType="int" />
+        </OverrideableParameters>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="ICMPPing" TypeID="Community.ICMP.ICMPPingTime.DS">
+              <IP>$Config/IP$</IP>
+              <Interval>$Config/Interval$</Interval>
+              <NoOfRetries>$Config/NoOfRetries$</NoOfRetries>
+              <Timeout>$Config/Timeout$</Timeout>
+              <PacketSizeBytes>$Config/PacketSizeBytes$</PacketSizeBytes>
+              <NumberOfSamples>$Config/NumberOfSamples$</NumberOfSamples>
+            </DataSource>
+            <ConditionDetection ID="BelowThresholdCD" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="Integer">Value</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Less</Operator>
+                  <ValueExpression>
+                    <Value Type="Integer">$Config/ErrorThreshold$</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="OverThresholdCD" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="Integer">Value</XPathQuery>
+                  </ValueExpression>
+                  <Operator>GreaterEqual</Operator>
+                  <ValueExpression>
+                    <Value Type="Integer">$Config/ErrorThreshold$</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="BelowThreshold">
+              <Node ID="BelowThresholdCD">
+                <Node ID="ICMPPing" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="OverThreshold">
+              <Node ID="OverThresholdCD">
+                <Node ID="ICMPPing" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+    </MonitorTypes>
+  </TypeDefinitions>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="Community.ICMP.Monitoring">
+          <Name>Community ICMP Monitoring</Name>
+          <Description>Adds some very basic ICMP monitoring to SCOM</Description>
+        </DisplayString>
+      </DisplayStrings>
+      <KnowledgeArticles></KnowledgeArticles>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPack>

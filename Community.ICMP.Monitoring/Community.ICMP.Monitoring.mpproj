@@ -14,11 +14,11 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug\</OutputPath>
-    <GenerateSealed>false</GenerateSealed>
-    <Company>MyCompany</Company>
-    <Copyright>Copyright (c) MyCompany. All rights reserved.</Copyright>
-    <DelaySigning>false</DelaySigning>
-    <AssemblyOriginatorKeyFile />
+    <GenerateSealed>True</GenerateSealed>
+    <Company>Community MP</Company>
+    <Copyright>Copyright (c) Samuel Tegenfeldt. Some rights reserved.</Copyright>
+    <DelaySigning>False</DelaySigning>
+    <AssemblyOriginatorKeyFile>..\Community.ICMP.Monitoring.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugSymbols>false</DebugSymbols>
@@ -33,6 +33,12 @@
     <ManagementPackReference Include="Microsoft.SystemCenter.Library">
       <Alias>SC</Alias>
       <PackageToBundle>false</PackageToBundle>
+    </ManagementPackReference>
+    <ManagementPackReference Include="Microsoft.SystemCenter.NetworkDevice.Library">
+      <HintPath>C:\Program Files (x86)\System Center Visual Studio Authoring Extensions\References\OM2012R2\Microsoft.SystemCenter.NetworkDevice.Library.mp</HintPath>
+      <Alias>MSNL</Alias>
+      <MinVersion>7.1.10226.0</MinVersion>
+      <PackageToBundle>False</PackageToBundle>
     </ManagementPackReference>
     <ManagementPackReference Include="Microsoft.Windows.Library">
       <Alias>Windows</Alias>
@@ -50,6 +56,35 @@
       <Alias>Visualization</Alias>
       <PackageToBundle>false</PackageToBundle>
     </ManagementPackReference>
+    <ManagementPackReference Include="System.NetworkManagement.Monitoring">
+      <HintPath>C:\Users\saper\OneDrive - Atea\Dev\SC\Community.ICMP.Monitoring\Community.ICMP.Monitoring\References\System.NetworkManagement.Monitoring.mp</HintPath>
+      <Alias>SNM</Alias>
+      <MinVersion>7.1.10226.0</MinVersion>
+      <PackageToBundle>False</PackageToBundle>
+    </ManagementPackReference>
+    <ManagementPackReference Include="System.Performance.Library">
+      <HintPath>C:\Program Files (x86)\System Center Visual Studio Authoring Extensions\References\OM2012R2\System.Performance.Library.mp</HintPath>
+      <Alias>Perf</Alias>
+      <MinVersion>7.0.8433.0</MinVersion>
+      <PackageToBundle>False</PackageToBundle>
+    </ManagementPackReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataSourceModules\ICMPPingTimeDS.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ManagementPack.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MonitorTypes\PingResponseTime2StateMonitorType.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DataSourceModules" />
+    <Folder Include="Monitors" />
+    <Folder Include="MonitorTypes" />
+    <Folder Include="ProbeModules" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VSAC\Microsoft.SystemCenter.OperationsManager.targets" />
 </Project>
